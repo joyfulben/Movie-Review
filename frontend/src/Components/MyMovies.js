@@ -1,6 +1,5 @@
 import React from 'react'
 import MyMovie from './MyMovie'
-import StarRatingComponent from 'react-star-rating-component';
 
   export default class MyMovies extends React.Component {
     render(){
@@ -12,7 +11,7 @@ import StarRatingComponent from 'react-star-rating-component';
           <div className="my-index">
           {this.props.storedMovies.map((movie, i)=> {
             return (
-            <MyMovie movie={movie} i={i} storedMovies={this.props.storedMovies} extURL={this.props.extURL} toggleForm={this.props.toggleForm} updateReviewState={this.props.updateReviewState} removeReview={this.props.removeReview}/>
+            <MyMovie movie={movie} i={i} storedMovies={this.props.storedMovies} extURL={this.props.extURL} toggleForm={this.props.toggleForm} updateReviewState={this.props.updateReviewState} updateStarState={this.props.updateStarState} removeReview={this.props.removeReview}/>
         )
       })}
       </div>

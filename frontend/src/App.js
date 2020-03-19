@@ -33,6 +33,7 @@ if (process.env.NODE_ENV === 'development'){
     this.getSavedMovies = this.getSavedMovies.bind(this)
     this.removeReview = this.removeReview.bind(this)
     this.updateReviewState = this.updateReviewState.bind(this)
+    this.updateStarState = this.updateStarState.bind(this)
    }
    componentDidMount(){
      this.getSavedMovies()
@@ -87,13 +88,28 @@ if (process.env.NODE_ENV === 'development'){
         console.error(e);
       }
     }
+    async updateStarState(updateRating){
+      try {
+        const foundRatingIndex = this.state.storedMovies.findIndex(foundRating => {
+        return foundRating._id === updateRating._id
+    })
+        const copyRatings = [...this.state.storedMovies]
+        let updatedRating = updateRating
+        copyRatings[foundRatingIndex] = updatedRating
+        this.setState({
+            storedMovies: copyRatings
+        })
+      } catch (e) {
+        console.error(e);
+      }
+    }
 render(){
   return(
     <>
 <Router>
   <div>
     <NavBar />
-    <Route exact path='/my_movies' component={() => <MyMovies storedMovies={this.state.storedMovies} extURL={extURL} toggleForm={this.toggleForm} updateReviewState={this.updateReviewState} removeReview={this.removeReview}
+    <Route exact path='/my_movies' component={() => <MyMovies storedMovies={this.state.storedMovies} extURL={extURL} toggleForm={this.toggleForm} updateReviewState={this.updateReviewState} updateStarState={this.updateStarState} removeReview={this.removeReview}
       />} />
     <Route path='/new' exact component={NewForm} />
     <Route exact path='/' component={() => <><SearchBar handleAddExternal={this.handleAddExternal} baseURL={baseURL} /><MovieDisplay externalMovies={this.state.externalMovies} extURL={extURL} handleAddInternal={this.handleAddInternal} /> </>

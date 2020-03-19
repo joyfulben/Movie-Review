@@ -17,9 +17,7 @@ export default class MyMovie extends React.Component {
     this.updateReview = this.updateReview.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.togglePlot = this.togglePlot.bind(this)
-    }
-    onStarClick(nextValue, prevValue, name) {
-    this.setState({rating: nextValue});
+    this.saveStar = this.saveStar.bind(this)
     }
     toggleForm(){
      this.setState({showForm: !this.state.showForm})
@@ -32,6 +30,26 @@ export default class MyMovie extends React.Component {
     togglePlot () {
       this.setState({showPlot: !this.state.showPlot})
     }
+    onStarClick(nextValue, prevValue, name) {
+   this.setState({rating: nextValue});
+ }
+    async saveStar(rating){
+        console.log(rating);
+    try{
+      let response = await fetch(`${this.props.extURL}/reviews/${rating._id}`, {
+        body: JSON.stringify(rating),
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json, text/plain, */*',
+          'Content-Type': 'application/json'
+        }
+      })
+      let updatedRating = await response.json()
+      this.props.updateStarState(updatedRating)
+    } catch(e){
+      console.log(e);
+    }
+  }
     async updateReview(event, review){
       console.log(review);
       event.preventDefault()
@@ -65,6 +83,7 @@ export default class MyMovie extends React.Component {
     }
   render(){
   const { rating } = this.state;
+  console.log(this.props.movie);
     return(
       <>
           <div>
@@ -76,7 +95,7 @@ export default class MyMovie extends React.Component {
                name="rate1"
                starCount={5}
                value={this.state.rating}
-               onStarClick={this.onStarClick.bind(this)}/>
+               onStarClick={() => {this.onStarClick.bind(this); this.saveStar(this.props.movie)}}/>
                {this.state.showForm ? <UpdateForm storedMovie={this.props.storedMovies[this.props.i]} updateReview={this.updateReview} review={this.state.review} toggleForm={this.toggleForm}/> : <div></div>}
                <h4 onClick={this.toggleForm}>Create Review</h4>
                <button onClick={()=>this.removeReview(this.props.movie._id)}>X</button>
